@@ -52,6 +52,13 @@ var disqus_url;
         loadDisqusCounter();
       }
 
+      // Hide the discussion.
+      $('html').click(function(event) {
+        if($(event.target).parents('#disqussions_wrapper').length === 0) {
+          hideDisqussion();
+        }
+      });
+
     }
   });
 
@@ -92,9 +99,17 @@ var disqus_url;
     // Load the relative discussion.
     a.delegate('a.disqussion-link', "click", function(e) {
       e.preventDefault();
-      loadDisqus($(this), function(source) {
-        relocateDisqussion(source);
-      });
+
+      if ($(this).is('.active')) {
+        e.stopPropagation();
+        hideDisqussion();
+      }
+      else {
+        loadDisqus($(this), function(source) {
+          relocateDisqussion(source);
+        });
+      }
+
     });
 
   };
@@ -126,6 +141,10 @@ var disqus_url;
 
     }
 
+    // Add 'active' class.
+    $('a.disqussion-link').removeClass('active').filter(source).addClass('active');
+
+
     callback(source);
 
   };
@@ -149,11 +168,18 @@ var disqus_url;
   var relocateDisqussion = function(el) {
 
     // Move the discussion to the right position.
-    $('#disqus_thread').animate({
+    $('#disqus_thread').stop().fadeIn('fast').animate({
       "top": el.offset().top,
       "left": el.offset().left + el.outerWidth(),
       "width": $(window).width() - (el.offset().left + el.outerWidth())
     }, "fast" );
+
+  };
+
+  var hideDisqussion = function() {
+
+    $('#disqus_thread').stop().fadeOut('fast');
+    $('a.disqussion-link').removeClass('active');
 
   };
 

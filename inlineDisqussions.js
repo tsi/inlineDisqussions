@@ -5,9 +5,9 @@
  *
  *  USAGE:
  *
- *       disqus_shortname = 'inlinecomments';
+ *       disqus_shortname = 'your_disqus_shortname';
  *       $(document).ready(function() {
- *         $("p").inlineDisqussions();
+ *         $("p").inlineDisqussions(options);
  *       });
  *
  *  See https://github.com/tsi/inlineDisqussions for more info.
@@ -18,7 +18,6 @@ var disqus_shortname;
 var disqus_identifier;
 var disqus_url;
 
-// @ToDo - dynamic horizontal position/width
 (function($) {
 
   var settings = {};
@@ -28,7 +27,9 @@ var disqus_url;
 
       // Set up defaults
       var defaults = {
+        identifier: 'disqussion',
         displayCount: true,
+        highlighted: false
       };
 
       // Overwrite default options with user provided ones.
@@ -40,6 +41,9 @@ var disqus_url;
       }
       if ($('#disqus_thread').length === 0) {
         $('<div id="disqus_thread"></div>').appendTo('#disqussions_wrapper');
+      }
+      if (settings.highlighted) {
+        $('<div id="disqussions_overlay"></div>').appendTo($('body'));
       }
 
       // Attach a discussion to each paragraph.
@@ -70,17 +74,18 @@ var disqus_url;
       identifier = node.attr('data-disqus-identifier');
     }
     else {
-      while ($('[data-disqus-identifier="' + window.location.pathname + 'disqussion-' + i + '"]').length > 0) {
+      while ($('[data-disqus-identifier="' + window.location.pathname + settings.identifier + '-' + i + '"]').length > 0) {
         i++;
       }
-      identifier = window.location.pathname + 'disqussion-' + i;
+      identifier = window.location.pathname + settings.identifier + '-' + i;
     }
 
     // Create the discussion note.
-    var a = $('<a class="disqussion-link" />')
-      .attr('href', window.location.pathname + 'disqussion-'  + i + '#disqus_thread')
+    var cls = settings.highlighted ? 'disqussion-link disqussion-highlight' : 'disqussion-link';
+    var a = $('<a class="' + cls + '" />')
+      .attr('href', window.location.pathname + settings.identifier + '-'  + i + '#disqus_thread')
       .attr('data-disqus-identifier', identifier)
-      .attr('data-disqus-url', window.location.href + 'disqussion-' + i)
+      .attr('data-disqus-url', window.location.href + settings.identifier + '-' + i)
       .text('+')
       .wrap('<div class="disqussion" />')
       .parent()
@@ -144,6 +149,10 @@ var disqus_url;
     // Add 'active' class.
     $('a.disqussion-link').removeClass('active').filter(source).addClass('active');
 
+    // Highlight
+    if (source.is('.disqussion-highlight')) {
+      highlightDisqussion(identifier);
+    }
 
     callback(source);
 
@@ -180,6 +189,21 @@ var disqus_url;
 
     $('#disqus_thread').stop().fadeOut('fast');
     $('a.disqussion-link').removeClass('active');
+    if (settings.highlighted) {
+      $('#disqussions_overlay').fadeOut('fast');
+      $('body').removeClass('disqussion-highlight');
+    }
+
+  };
+
+  var highlightDisqussion = function(identifier) {
+
+    $('body').addClass('disqussion-highlight');
+    $('#disqussions_overlay').fadeIn('fast');
+    $('[data-disqus-identifier]')
+      .removeClass('disqussion-highlighted')
+      .filter('[data-disqus-identifier="' + identifier + '"]:not(".disqussion-link")')
+      .addClass('disqussion-highlighted');
 
   };
 

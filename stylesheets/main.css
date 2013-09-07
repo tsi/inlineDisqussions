@@ -235,8 +235,9 @@ th {
 
 td {
   border: 1px solid #ebebeb;
-  text-align: center;
   font-weight: 300;
+  font-size: 90%;
+  padding: 5px 8px;
 }
 
 form {
@@ -381,6 +382,11 @@ header {
 }
 header h2 {
   margin-top: 0;
+}
+
+table {
+  margin-top: 20px;
+  text-align: left;
 }
 
 .twitter-share-button {

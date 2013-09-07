@@ -46,6 +46,11 @@
           <p class="narrow-p">
             Check this out, if you try to comment on this paragraph you'll see that I can also resize to fit the available space.<br><strong>TIP:</strong> You can easily set <code>max-width</code> and <code>min-width</code> in your CSS if you don't want the comments to get too wide or too narrow.
           </p>
+          <h3>Can you highlight?</h3>
+          <p class="highlighted">
+            I sure can, when you click on this paragraph's comments icon you'll see it is highlighted while the rest of the page is being blacked out.<br>
+            You can enable this effect by setting <code>highlight</code> to <code>true</code> in the settings object, see the <em>options</em> section for more info.
+          </p>
           <h2>USAGE</h2>
           <p>That should be pretty simple.<br>
           First <a href="https://github.com/tsi/inlineDisqussions/tarball/master">download</a> it, then include the script (anywhere after jQuery):</p>
@@ -67,12 +72,34 @@
 
           <h2>OPTIONS</h2>
           <p>Right now not many, if you need more <a href="https://github.com/tsi/inlineDisqussions/issues/new">let me know</a>.<br>
-          You can pass a settings object containing the following options:</p>
+          You can pass a settings object containing the following options (these are the defaults):</p>
 <div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">jQuery(<span style="color: #a31515">&quot;p&quot;</span>).inlineDisqussions({
-  displayCount: <span style="color: #0000ff">false</span> <span style="color: #008000">// This will prevent the appearance of a comment count in the icon</span>
+  identifier: <span style="color: #a31515">&#39;disqussion&#39;</span>,
+  displayCount: <span style="color: #0000ff">true</span>,
+  highlighted: <span style="color: #0000ff">false</span>
 });
 </pre></div>
 
+
+          <table>
+            <tbody>
+              <tr>
+                <td>identifier</td>
+                <td>string</td>
+                <td>set a string to be used, together with an index number, as the <code>disqus_identifier</code> string. defaults to &#39;disqussion&#39;.</td>
+              </tr>
+              <tr>
+                <td>displayCount</td>
+                <td>boolean</td>
+                <td>Enable/disable the comment count inside the icon. defaults to true.</td>
+              </tr>
+              <tr>
+                <td>highlighted</td>
+                <td>boolean</td>
+                <td>Enable/disable the highlighting of the active section. defaults to false.</td>
+              </tr>
+            </tbody>
+          </table>
 
 
           <h2>LIMITATIONS</h2>
@@ -100,7 +127,11 @@
     <script>
       disqus_shortname = 'inlinecomments';
       jQuery(document).ready(function() {
-        jQuery("p").inlineDisqussions();
+        jQuery("p:not('.highlight')").inlineDisqussions();
+        jQuery("p.highlighted").inlineDisqussions({
+          identifier: 'disqussion-highlighted',
+          highlighted: true
+        });
       });
     </script>
 

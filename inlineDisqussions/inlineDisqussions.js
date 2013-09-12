@@ -255,11 +255,11 @@ var disqus_url;
 
     $('#disqus_thread').stop().fadeOut('fast');
     $('a.disqussion-link').removeClass('active');
-    if (settings.highlighted) {
-      $('#disqussions_overlay').fadeOut('fast');
-      $('body').removeClass('disqussion-highlight');
-      $('[data-disqus-identifier]').removeClass('disqussion-highlighted');
-    }
+
+    // settings.highlighted
+    $('#disqussions_overlay').fadeOut('fast');
+    $('body').removeClass('disqussion-highlight');
+    $('[data-disqus-identifier]').removeClass('disqussion-highlighted');
 
   };
 

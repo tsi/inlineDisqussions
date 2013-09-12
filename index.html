@@ -44,7 +44,7 @@
           When you click on one of those marks, if a discussion already exists, it will load in-place, otherwise a fresh discussion will be created and positioned dynamically next to the relative paragraph.</p>
           <h3>Dynamic positioning you say?</h3>
           <p class="narrow-p">
-            Check this out, if you try to comment on this paragraph you'll see that I can also resize to fit the available space.<br><strong>TIP:</strong> You can easily set <code>max-width</code> and <code>min-width</code> in your CSS if you don't want the comments to get too wide or too narrow.
+            Check this out, if you try to comment on this paragraph you'll see that I am resizing to fit the available space and that I can also be positioned to the left, if needed.<br><strong>TIP:</strong> You can easily set <code>maxWidth</code> if you don't want the comments to get too wide, see the options section for more info.
           </p>
           <h3>Can you highlight?</h3>
           <p class="highlighted">
@@ -166,12 +166,15 @@
     <script>
       disqus_shortname = 'inlinecomments';
       jQuery(document).ready(function() {
-        jQuery("p:not('.highlighted')").inlineDisqussions({
+        jQuery("p:not('.highlighted, .narrow-p')").inlineDisqussions({
           position: 'right'
         });
         jQuery("p.highlighted").inlineDisqussions({
           identifier: 'disqussion-highlighted',
           highlighted: true,
+        });
+        jQuery("p.narrow-p").inlineDisqussions({
+          identifier: 'disqussion-narrow-p',
           position: 'left'
         });
       });

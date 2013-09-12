@@ -65,7 +65,7 @@
   left: 0;
 }
 
-#disqus_thread {
+#disqus_thread.positioned {
   position: absolute;
   top: 0;
   left: 0;
@@ -74,7 +74,7 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.disqussion-highlight #disqus_thread {
+.disqussion-highlight #disqus_thread.positioned {
   background: #fff;
   z-index: 9;
 }

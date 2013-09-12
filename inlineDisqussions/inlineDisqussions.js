@@ -29,7 +29,10 @@ var disqus_url;
       var defaults = {
         identifier: 'disqussion',
         displayCount: true,
-        highlighted: false
+        highlighted: false,
+        position: 'right',
+        background: 'white',
+        maxWidth: 9999
       };
 
       // Overwrite default options with user provided ones.
@@ -41,6 +44,9 @@ var disqus_url;
       }
       if ($('#disqus_thread').length === 0) {
         $('<div id="disqus_thread"></div>').appendTo('#disqussions_wrapper');
+      }
+      else {
+        mainThreadHandler();
       }
       if (settings.highlighted) {
         $('<div id="disqussions_overlay"></div>').appendTo($('body'));
@@ -58,7 +64,7 @@ var disqus_url;
 
       // Hide the discussion.
       $('html').click(function(event) {
-        if($(event.target).parents('#disqussions_wrapper').length === 0) {
+        if($(event.target).parents('#disqussions_wrapper, .main-disqussion-link-wrp').length === 0) {
           hideDisqussion();
         }
       });
@@ -86,14 +92,15 @@ var disqus_url;
       .attr('href', window.location.pathname + settings.identifier + '-'  + i + '#disqus_thread')
       .attr('data-disqus-identifier', identifier)
       .attr('data-disqus-url', window.location.href + settings.identifier + '-' + i)
+      .attr('data-disqus-position', settings.position)
       .text('+')
       .wrap('<div class="disqussion" />')
       .parent()
-      .css({
-        'top': node.offset().top,
-        'left': node.offset().left + node.outerWidth()
-      })
       .appendTo('#disqussions_wrapper');
+    a.css({
+      'top': node.offset().top,
+      'left': settings.position == 'right' ? node.offset().left + node.outerWidth() : node.offset().left - a.outerWidth()
+    });
 
     node.attr('data-disqus-identifier', identifier).mouseover(function() {
         a.addClass("hovered");
@@ -116,6 +123,37 @@ var disqus_url;
       }
 
     });
+
+  };
+
+  var mainThreadHandler = function() {
+
+    // Create the discussion note.
+    if ($('a.main-disqussion-link').length === 0) {
+
+      var a = $('<a class="main-disqussion-link" />')
+        .attr('href', window.location.pathname + '#disqus_thread')
+        .text('Comments')
+        .wrap('<h2 class="main-disqussion-link-wrp" />')
+        .parent()
+        .insertBefore('#disqus_thread');
+
+      // Load the relative discussion.
+      a.delegate('a.main-disqussion-link', "click", function(e) {
+        e.preventDefault();
+
+        if ($(this).is('.active')) {
+          e.stopPropagation();
+        }
+        else {
+          loadDisqus($(this), function(source) {
+            relocateDisqussion(source, true);
+          });
+        }
+
+      });
+
+    }
 
   };
 
@@ -147,7 +185,7 @@ var disqus_url;
     }
 
     // Add 'active' class.
-    $('a.disqussion-link').removeClass('active').filter(source).addClass('active');
+    $('a.disqussion-link, a.main-disqussion-link').removeClass('active').filter(source).addClass('active');
 
     // Highlight
     if (source.is('.disqussion-highlight')) {
@@ -174,14 +212,42 @@ var disqus_url;
 
   };
 
-  var relocateDisqussion = function(el) {
+  var relocateDisqussion = function(el, main) {
 
     // Move the discussion to the right position.
-    $('#disqus_thread').stop().fadeIn('fast').animate({
-      "top": el.offset().top,
-      "left": el.offset().left + el.outerWidth(),
-      "width": $(window).width() - (el.offset().left + el.outerWidth())
-    }, "fast" );
+    var css = {};
+    if (main === true) {
+      $('#disqus_thread').removeClass("positioned");
+      css = {
+        'position': 'static',
+        'width': 'auto'
+      };
+    }
+    else {
+      $('#disqus_thread').addClass("positioned");
+      css = {
+        'position': 'absolute'
+      };
+    }
+    css.backgroundColor = settings.background;
+
+    var animate = {};
+    if (el.attr('data-disqus-position') == 'right') {
+      animate = {
+        "top": el.offset().top,
+        "left": el.offset().left + el.outerWidth(),
+        "width": Math.min(parseInt($(window).width() - (el.offset().left + el.outerWidth()), 10), settings.maxWidth)
+      };
+    }
+    else if (el.attr('data-disqus-position') == 'left') {
+      animate = {
+        "top": el.offset().top,
+        "left": el.offset().left - Math.min(parseInt(el.offset().left, 10), settings.maxWidth),
+        "width": Math.min(parseInt(el.offset().left, 10), settings.maxWidth)
+      };
+    }
+
+    $('#disqus_thread').stop().fadeIn('fast').animate(animate, "fast").css(css);
 
   };
 
@@ -192,6 +258,7 @@ var disqus_url;
     if (settings.highlighted) {
       $('#disqussions_overlay').fadeOut('fast');
       $('body').removeClass('disqussion-highlight');
+      $('[data-disqus-identifier]').removeClass('disqussion-highlighted');
     }
 
   };

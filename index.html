@@ -51,6 +51,10 @@
             I sure can, when you click on this paragraph's comments icon you'll see it is highlighted while the rest of the page is being blacked out.<br>
             You can enable this effect by setting <code>highlight</code> to <code>true</code> in the settings object, see the <em>options</em> section for more info.
           </p>
+          <h3>Can we still have a main comment thread at the bottom?</h3>
+          <p>
+            Yes we can, check out the bottom of this page. if you have a <code>div#disqus_thread</code> in your document it will function as a main comment thread, just like the normal Disqus comments wrapper.
+          </p>
           <h2>USAGE</h2>
           <p>That should be pretty simple.<br>
           First <a href="https://github.com/tsi/inlineDisqussions/tarball/master">download</a> it, then include the script (anywhere after jQuery):</p>
@@ -76,7 +80,10 @@
 <div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">jQuery(<span style="color: #a31515">&quot;p&quot;</span>).inlineDisqussions({
   identifier: <span style="color: #a31515">&#39;disqussion&#39;</span>,
   displayCount: <span style="color: #0000ff">true</span>,
-  highlighted: <span style="color: #0000ff">false</span>
+  highlighted: <span style="color: #0000ff">false</span>,
+  position: <span style="color: #a31515">&#39;right&#39;</span>,
+  background: <span style="color: #a31515">&#39;white&#39;</span>,
+  maxWidth: 9999
 });
 </pre></div>
 
@@ -98,6 +105,21 @@
                 <td>boolean</td>
                 <td>Enable/disable the highlighting of the active section. defaults to false.</td>
               </tr>
+              <tr>
+                <td>position</td>
+                <td>string</td>
+                <td>Where to position the inline threads, 'left'/'right'. defaults to 'right'.</td>
+              </tr>
+              <tr>
+                <td>background</td>
+                <td>string</td>
+                <td>CSS background-color for the comment threads.</td>
+              </tr>
+              <tr>
+                <td>maxWidth</td>
+                <td>number</td>
+                <td>Maximum width, in pixels, for the comment threads.</td>
+              </tr>
             </tbody>
           </table>
 
@@ -114,6 +136,7 @@
           <p>If you have any, <a href="https://github.com/tsi/inlineDisqussions/issues/new">let me know</a>.</p>
         </section>
 
+    <div id="disqus_thread"></div>
         <footer>
           inlineDisqussions is maintained by <a href="https://github.com/tsi">Tsachi Shlidor</a><br>
         </footer>
@@ -121,16 +144,35 @@
       </div>
     </div>
 
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'inlinecomments'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="javascripts/jquery-1.9.1.min.js"><\/script>')</script>
     <script src="inlineDisqussions/inlineDisqussions.js"></script>
     <script>
       disqus_shortname = 'inlinecomments';
       jQuery(document).ready(function() {
-        jQuery("p:not('.highlight')").inlineDisqussions();
+        jQuery("p:not('.highlighted')").inlineDisqussions({
+          position: 'right'
+        });
         jQuery("p.highlighted").inlineDisqussions({
           identifier: 'disqussion-highlighted',
-          highlighted: true
+          highlighted: true,
+          position: 'left'
         });
       });
     </script>

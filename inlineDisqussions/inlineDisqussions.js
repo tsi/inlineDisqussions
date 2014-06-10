@@ -210,7 +210,6 @@ var disqus_url;
         // After script is loaded, show bubles with numbers.
         if (typeof(DISQUSWIDGETS) === 'object') {
           $('.disqussion-link').filter(function() {
-            console.log($(this).text().match(/[1-9]/g));
             return $(this).text().match(/[1-9]/g);
           }).addClass("has-comments");
           clearInterval(timer);

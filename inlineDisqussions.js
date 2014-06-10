@@ -159,23 +159,20 @@ var disqus_url;
 
   var loadDisqus = function(source, callback) {
 
-    var identifier = source.attr('data-disqus-identifier');
-    var url = source.attr('data-disqus-url');
+    var disqus_identifier = source.attr('data-disqus-identifier');
+    var disqus_url = source.attr('data-disqus-url');
 
     if (window.DISQUS) {
       // If Disqus exists, call it's reset method with new parameters.
       DISQUS.reset({
         reload: true,
         config: function () {
-          this.page.identifier = identifier;
-          this.page.url = url;
+          this.page.identifier = disqus_identifier;
+          this.page.url = disqus_url;
         }
       });
 
     } else {
-
-      disqus_identifier = identifier;
-      disqus_url = url;
 
       // Append the Disqus embed script to <head>.
       var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
@@ -199,16 +196,31 @@ var disqus_url;
   var loadDisqusCounter = function() {
 
     // Append the Disqus count script to <head>.
-    var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
-    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-    $('head').append(s);
+    if (!$('script[src*="disqus.com/count.js"]').length) {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '//' + disqus_shortname + '.disqus.com/count.js';
 
-    // Add class to discussions that already have comments.
-    window.setTimeout(function() {
-      $('.disqussion-link').filter(function() {
-        return $(this).text().match(/[1-9]/g);
-      }).addClass("has-comments");
-    }, 1000);
+      $('head').append(s);
+
+      var limit = 0;
+      var timer = setInterval(function() {
+        limit++;
+        // After script is loaded, show bubles with numbers.
+        if (typeof(DISQUSWIDGETS) === 'object') {
+          $('.disqussion-link').filter(function() {
+            return $(this).text().match(/[1-9]/g);
+          }).addClass("has-comments");
+          clearInterval(timer);
+        }
+        // Don't run forever.
+        if (limit > 10) {
+          clearInterval(timer);
+        }
+      }, 1000)
+
+    }
 
   };
 

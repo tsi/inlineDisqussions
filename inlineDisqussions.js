@@ -159,8 +159,8 @@ var disqus_url;
 
   var loadDisqus = function(source, callback) {
 
-    var disqus_identifier = source.attr('data-disqus-identifier');
-    var disqus_url = source.attr('data-disqus-url');
+    disqus_identifier = source.attr('data-disqus-identifier');
+    disqus_url = source.attr('data-disqus-url');
 
     if (window.DISQUS) {
       // If Disqus exists, call it's reset method with new parameters.

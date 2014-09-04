@@ -175,7 +175,9 @@ var disqus_url;
     } else {
 
       // Append the Disqus embed script to <head>.
-      var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
       s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
       $('head').append(s);
 
@@ -186,7 +188,7 @@ var disqus_url;
 
     // Highlight
     if (source.is('.disqussion-highlight')) {
-      highlightDisqussion(identifier);
+      highlightDisqussion(disqus_identifier);
     }
 
     callback(source);

@@ -231,14 +231,21 @@ var disqus_url;
     // Move the discussion to the right position.
     var css = {};
     if (main === true) {
-      $('#disqus_thread').removeClass("positioned");
+      $('#disqus_thread')
+        .appendTo('.disqus_thread_wrap')
+        .removeClass("positioned");
       css = {
         'position': 'static',
         'width': 'auto'
       };
     }
     else {
-      $('#disqus_thread').addClass("positioned");
+      if (!$(".disqus_thread_wrap").length) {
+        $('#disqus_thread').wrap('<div class="disqus_thread_wrap" />');        
+      }
+      $('#disqus_thread')
+        .appendTo("body")
+        .addClass("positioned");
       css = {
         'position': 'absolute'
       };
